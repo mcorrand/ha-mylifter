@@ -1,0 +1,174 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "title": "Add MyLifter",
+        "menu_options": {
+          "motor": "Add a motor",
+          "group": "Create a lifter group (multi-motor lifter)"
+        }
+      },
+      "motor": {
+        "title": "Select the motor",
+        "description": "Pick a motor that a connectable Bluetooth adapter or ESPHome Bluetooth proxy has seen, or type its Bluetooth address.",
+        "data": {
+          "address": "Motor"
+        },
+        "data_description": {
+          "address": "Bluetooth address, for example CC:CC:CC:12:34:56. The motor must be in range of an ESPHome Bluetooth proxy with active connections enabled."
+        }
+      },
+      "bluetooth_confirm": {
+        "description": "Set up {name}?"
+      },
+      "pair": {
+        "title": "Pair {name}",
+        "description": "1. Choose how this motor is used.\n2. **Press the button on the lifter motor.**\n3. Click Submit.\n\nHome Assistant then connects and waits up to 30 seconds for the motor to send its passkey. If nothing happens, press the button again while it is waiting.",
+        "data": {
+          "motor_arrangement": "Motor arrangement"
+        },
+        "data_description": {
+          "motor_arrangement": "If the lifter has more than one motor, choose the second option. Those motors can then only move together through a lifter group, never on their own. This cannot be changed later without removing the motor."
+        }
+      },
+      "reauth_confirm": {
+        "title": "Pair {name} again",
+        "description": "The motor rejected the stored passkey. **Press the button on the lifter motor**, then click Submit."
+      },
+      "group": {
+        "title": "Create a lifter group",
+        "description": "Select all motors of ONE lifter. They will only move together, and every motor stops if one of them fails.",
+        "data": {
+          "members": "Motors"
+        },
+        "data_description": {
+          "members": "Only motors paired as \"one of several motors on the same lifter\" are listed."
+        }
+      }
+    },
+    "progress": {
+      "wait_for_button": "Waiting for {name} to send its passkey. Press the button on the lifter motor now if you have not already."
+    },
+    "error": {
+      "cannot_connect": "Failed to connect. Make sure the motor is powered and in range of an ESPHome Bluetooth proxy with active connections enabled.",
+      "no_connection_slot": "The Bluetooth adapter or proxy has no free connection slot. Disconnect other Bluetooth devices or add another proxy.",
+      "invalid_auth": "The motor rejected the passkey. Try pairing again.",
+      "pairing_timeout": "No passkey received within 30 seconds. Press the button on the lifter motor and submit again.",
+      "invalid_address": "Not a valid Bluetooth address.",
+      "not_found": "No connectable Bluetooth adapter or proxy has seen this address.",
+      "group_needs_two": "Select at least two motors.",
+      "unknown": "Unexpected error"
+    },
+    "abort": {
+      "already_configured": "This device is already configured",
+      "already_in_progress": "Configuration flow is already in progress",
+      "not_enough_motors": "At least two loaded motors that were paired as part of a multi-motor lifter are needed.",
+      "reauth_successful": "Re-authentication was successful"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Position calibration",
+        "description": "The cover position is derived from the raw motor position of the top and bottom smart points. They are learned automatically when an open or close completes. You can also enter or reset them here.",
+        "data": {
+          "top_position": "Top smart point (raw position)",
+          "bottom_position": "Bottom smart point (raw position)",
+          "reset_calibration": "Forget learned smart points"
+        },
+        "data_description": {
+          "top_position": "Raw position when stowed at the top. Enable the \"Raw position\" sensor to see the current value.",
+          "bottom_position": "Raw position at the lowest smart point.",
+          "reset_calibration": "Clear both values; they are learned again on the next full open and close."
+        }
+      }
+    }
+  },
+  "selector": {
+    "motor_arrangement": {
+      "options": {
+        "single": "Single motor: this motor lifts the platform on its own",
+        "multi": "One of several motors on the same lifter"
+      }
+    }
+  },
+  "entity": {
+    "cover": {
+      "hoist": {
+        "name": "Hoist"
+      },
+      "lifter_group": {
+        "name": "Lifter"
+      }
+    },
+    "binary_sensor": {
+      "connection": {
+        "name": "Connection"
+      }
+    },
+    "sensor": {
+      "load": {
+        "name": "Load"
+      },
+      "raw_position": {
+        "name": "Raw position"
+      },
+      "firmware": {
+        "name": "Firmware"
+      },
+      "last_error": {
+        "name": "Last error",
+        "state": {
+          "none": "None",
+          "connection_failed": "Connection failed",
+          "no_connection_slot": "No free proxy connection slot",
+          "auth_failed": "Passkey rejected",
+          "move_not_confirmed": "Move not confirmed",
+          "move_write_failed": "Move command could not be sent",
+          "connection_lost_while_moving": "Connection lost while moving",
+          "move_timeout": "Move took too long",
+          "smart_point_not_set": "Smart point not set",
+          "device_error": "Device error",
+          "stop_failed": "STOP could not be delivered",
+          "group_aborted": "Stopped by lifter group"
+        }
+      }
+    }
+  },
+  "exceptions": {
+    "auth_failed": {
+      "message": "The motor rejected the stored passkey."
+    },
+    "cannot_connect": {
+      "message": "Could not communicate with the motor: {error}"
+    },
+    "device_not_found": {
+      "message": "Motor {address} is not in range of a connectable Bluetooth adapter or proxy."
+    },
+    "move_failed": {
+      "message": "The move was not started or was aborted: {error}"
+    },
+    "stop_failed": {
+      "message": "STOP could not be delivered: {error}. Use the physical controls or the MyLifter app."
+    },
+    "busy": {
+      "message": "A move is already in progress. Stop it first."
+    },
+    "multi_motor_solo_move": {
+      "message": "This motor is part of a multi-motor lifter and can only move through its lifter group."
+    },
+    "group_member_unavailable": {
+      "message": "Not all motors of this lifter are available."
+    },
+    "group_members_not_ready": {
+      "message": "Waiting for all motors of this lifter to be set up."
+    },
+    "group_move_failed": {
+      "message": "The lifter did not start on all motors and was stopped: {error}"
+    },
+    "group_out_of_sync": {
+      "message": "The motors of this lifter are not at the same smart point; the lifter was stopped. Align them with the MyLifter app."
+    }
+  }
+}

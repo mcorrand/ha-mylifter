@@ -1,0 +1,41 @@
+# Quality scale self-assessment (custom integration; Bronze targeted).
+rules:
+  # Bronze
+  action-setup:
+    status: exempt
+    comment: No custom actions.
+  appropriate-polling: done
+  brands:
+    status: todo
+    comment: No original icon yet; must not use GarageSmart/MyLifter trademarks.
+  common-modules: done
+  config-flow-test-coverage: done
+  config-flow: done
+  dependency-transparency:
+    status: exempt
+    comment: No requirements; protocol code is vendored from PyLifter (GPL-3.0) as requested.
+  docs-actions:
+    status: exempt
+    comment: No custom actions.
+  docs-high-level-description: done
+  docs-installation-instructions: done
+  docs-removal-instructions: done
+  entity-event-setup: done
+  entity-unique-id: done
+  has-entity-name: done
+  runtime-data: done
+  test-before-configure: done
+  test-before-setup: done
+  unique-config-entry: done
+
+  # Silver (partly)
+  action-exceptions: done
+  config-entry-unloading: done
+  entity-unavailable: done
+  log-when-unavailable: done
+  parallel-updates: done
+  reauthentication-flow: done
+  test-coverage: todo
+  integration-owner: done
+  docs-configuration-parameters: done
+  docs-installation-parameters: done
