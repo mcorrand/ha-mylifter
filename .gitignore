@@ -221,3 +221,6 @@ __marimo__/
 
 .claude
 skills-lock.json
+
+# Local scratch (upstream PyLifter checkout, experiments)
+.scratch/
