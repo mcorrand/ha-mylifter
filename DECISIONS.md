@@ -194,3 +194,29 @@ The sandbox blocked creating a nested `.git` inside the repo. The working tree w
 
 ## GitHub owner
 The template placeholder `<GITHUB_USERNAME>` was filled from the git remote: `mcorrand`.
+
+## Frames are built inside the write lock
+Found during implementation. If a keep-alive MOVE frame is built before waiting for the
+GATT write lock, a frame built just before STOP could be written *after* the STOP frame. It
+would restart the motor for one keep-alive period, and it would also carry a stale position
+echo (sync error). **Decision:** `_write()` accepts a frame factory that is evaluated while
+the lock is held. A move's first frame is skipped if STOP ended the move in the meantime.
+There is a regression test (`test_no_stale_move_frame_after_stop`, with slow writes).
+
+## Idle disconnect vs. operations in flight
+An idle-disconnect timer that fires while a move is still preparing must not close the
+session. **Decision:** an in-use counter covers polls, moves and STOP. The idle disconnect
+re-checks it synchronously right before closing.
+
+## Translations
+Custom integrations load `translations/en.json` directly. **Decision:** keep only that file
+(no `strings.json` copy that could drift).
+
+## Validation workflows
+- `home-assistant/actions/hassfest@master` and `hacs/action@main` (category
+  `integration`), as the Marketplace contributor docs recommend.
+- The HACS `brands` check is ignored until an original icon exists.
+- hassfest was not run locally. Running downloaded core code was not permitted in the
+  build sandbox. The manifest was checked by hand against the 2026.11.1 hassfest schema.
+- The HACS action also checks GitHub repository metadata (description, topics, issues
+  enabled). Set these on GitHub before the first release.

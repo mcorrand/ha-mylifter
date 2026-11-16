@@ -1,0 +1,21 @@
+{
+  "entity": {
+    "sensor": {
+      "load": {
+        "default": "mdi:weight"
+      },
+      "raw_position": {
+        "default": "mdi:arrow-up-down"
+      },
+      "firmware": {
+        "default": "mdi:chip"
+      },
+      "last_error": {
+        "default": "mdi:alert-circle-outline",
+        "state": {
+          "none": "mdi:check-circle-outline"
+        }
+      }
+    }
+  }
+}

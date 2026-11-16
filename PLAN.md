@@ -33,7 +33,7 @@ custom_components/mylifter/
   group.py         MyLifterGroup: synchronised control of a multi-motor lifter
   config_flow.py   bluetooth discovery, manual, pairing, group, reauth, options
   cover.py / sensor.py / binary_sensor.py / entity.py
-  diagnostics.py, strings.json, translations/en.json, manifest.json, quality_scale.yaml
+  diagnostics.py, translations/en.json, icons.json, manifest.json, quality_scale.yaml
 ```
 
 ### Layers
