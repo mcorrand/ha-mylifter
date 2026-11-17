@@ -60,17 +60,18 @@ async def test_open_close_learn_positions(
     # A sync error caused by the initial echo is cleared before moving.
     assert bytes([CommandCode.CLEAR_ERROR, 0]) in device.frames
     first = device.smart_moves()[0]
-    assert first.code is MoveCode.SMART_DOWN
+    assert first.code is MoveCode.SMART_UP  # open = raise
     assert first.echo == 1000  # echoes the device position
-    await _wait(lambda: not _moving(hass))
-    assert device.position == 0
-    assert entry.options[CONF_BOTTOM_POSITION] == 0
-
-    await _call(hass, SERVICE_CLOSE_COVER)
-    assert hass.states.get(COVER).state == CoverState.CLOSING
     await _wait(lambda: not _moving(hass))
     assert device.position == 2000
     assert entry.options[CONF_TOP_POSITION] == 2000
+
+    await _call(hass, SERVICE_CLOSE_COVER)
+    assert device.smart_moves()[-1].code is MoveCode.SMART_DOWN  # close = lower
+    assert hass.states.get(COVER).state == CoverState.CLOSING
+    await _wait(lambda: not _moving(hass))
+    assert device.position == 0
+    assert entry.options[CONF_BOTTOM_POSITION] == 0
     state = hass.states.get(COVER)
     assert state.state == CoverState.CLOSED
     assert state.attributes[ATTR_CURRENT_POSITION] == 0
@@ -106,7 +107,7 @@ async def test_stop_has_priority(
     await asyncio.sleep(0.1)
     assert device.position == stopped_at
     assert not _moving(hass)
-    assert CONF_BOTTOM_POSITION not in init_integration.options
+    assert CONF_TOP_POSITION not in init_integration.options
     assert hass.states.get(LAST_ERROR).state == "none"
 
 
@@ -165,7 +166,7 @@ async def test_failed_move_write_is_not_resent(
     hass: HomeAssistant, init_integration: MockConfigEntry, device: FakeMyLifter
 ) -> None:
     """If the move frame cannot be written, report an error and do not resend."""
-    device.fail_write_codes = {MoveCode.SMART_DOWN}
+    device.fail_write_codes = {MoveCode.SMART_UP}
     with pytest.raises(HomeAssistantError):
         await _call(hass, SERVICE_OPEN_COVER)
     await asyncio.sleep(0.3)
@@ -225,12 +226,12 @@ async def test_unknown_device_error_blocks_moves(
 async def test_already_at_limit(
     hass: HomeAssistant, init_integration: MockConfigEntry, device: FakeMyLifter
 ) -> None:
-    """Opening when already at the bottom is a no-op, not an error."""
-    device.position = 0
+    """Opening when already at the top is a no-op, not an error."""
+    device.position = 2000
     await init_integration.runtime_data.async_refresh()
     await _call(hass, SERVICE_OPEN_COVER)
     assert hass.states.get(LAST_ERROR).state == "none"
-    assert init_integration.options[CONF_BOTTOM_POSITION] == 0
+    assert init_integration.options[CONF_TOP_POSITION] == 2000
 
 
 async def test_moves_are_not_queued(

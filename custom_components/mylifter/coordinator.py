@@ -132,18 +132,18 @@ class MyLifterCoordinator(DataUpdateCoordinator[LifterState]):
         return self.config_entry.options.get(CONF_BOTTOM_POSITION)
 
     def cover_position(self, state: LifterState) -> int | None:
-        """0 = stowed at the top, 100 = at the bottom smart point."""
+        """100 = raised to the top smart point, 0 = lowered to the bottom one."""
         top, bottom = self.top_position, self.bottom_position
         if state.position is None or top is None or bottom is None or top == bottom:
             return None
-        fraction = (top - state.position) / (top - bottom)
+        fraction = (state.position - bottom) / (top - bottom)
         return round(min(max(fraction, 0.0), 1.0) * 100)
 
     def is_closed(self, state: LifterState) -> bool | None:
-        """Closed = stowed at the top smart point."""
-        if state.position is None or self.top_position is None:
+        """Closed = lowered to the bottom smart point."""
+        if state.position is None or self.bottom_position is None:
             return None
-        return abs(state.position - self.top_position) <= CLOSED_TOLERANCE
+        return abs(state.position - self.bottom_position) <= CLOSED_TOLERANCE
 
     # --------------------------------------------------------------- commands
 

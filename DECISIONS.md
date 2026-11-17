@@ -118,9 +118,12 @@ app". Auto-clearing unknown faults could bypass a protection.
   current raw position is saved as `top_position` in the entry options. `SMART_DOWN` saves
   `bottom_position` the same way.
 - The user can view, edit or clear these in the options flow.
-- `current_cover_position` = 0 at top, 100 at bottom, clamped. It is `None` until both
+- Direction: **open = raise (`SMART_UP`), closed = lowered to the bottom.** This matches
+  the cover card, where you drag up to open, and garage doors. (v0.1.0 had it the other
+  way round, which felt backwards in use.)
+- `current_cover_position` = 100 at top, 0 at bottom, clamped. It is `None` until both
   points are known.
-- `is_closed` only needs `top_position`: within 50 ticks of it.
+- `is_closed` only needs `bottom_position`: within 50 ticks of it.
 - Upstream's cm calibration (slope/intercept) is not used.
 
 ## Load sensor units

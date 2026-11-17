@@ -31,7 +31,7 @@ async def async_setup_entry(
 
 
 class MyLifterCover(MyLifterEntity, CoverEntity):
-    """One motor. Open = lower to the bottom smart point, closed = stowed at the top.
+    """One motor. Open = raise to the top smart point, closed = lowered to the bottom.
 
     Motors that belong to a multi-motor lifter only support STOP; they move only
     through their group (see DECISIONS.md "Multi-motor").
@@ -64,20 +64,20 @@ class MyLifterCover(MyLifterEntity, CoverEntity):
     @property
     @override
     def is_opening(self) -> bool:
-        return self.coordinator.data.moving is MoveCode.SMART_DOWN
+        return self.coordinator.data.moving is MoveCode.SMART_UP
 
     @property
     @override
     def is_closing(self) -> bool:
-        return self.coordinator.data.moving is MoveCode.SMART_UP
+        return self.coordinator.data.moving is MoveCode.SMART_DOWN
 
     @override
     async def async_open_cover(self, **kwargs: Any) -> None:
-        await self.coordinator.async_move(MoveCode.SMART_DOWN)
+        await self.coordinator.async_move(MoveCode.SMART_UP)
 
     @override
     async def async_close_cover(self, **kwargs: Any) -> None:
-        await self.coordinator.async_move(MoveCode.SMART_UP)
+        await self.coordinator.async_move(MoveCode.SMART_DOWN)
 
     @override
     async def async_stop_cover(self, **kwargs: Any) -> None:
@@ -147,20 +147,20 @@ class MyLifterGroupCover(CoverEntity):
     @property
     @override
     def is_opening(self) -> bool:
-        return any(m.data.moving is MoveCode.SMART_DOWN for m in self._members())
+        return any(m.data.moving is MoveCode.SMART_UP for m in self._members())
 
     @property
     @override
     def is_closing(self) -> bool:
-        return any(m.data.moving is MoveCode.SMART_UP for m in self._members())
+        return any(m.data.moving is MoveCode.SMART_DOWN for m in self._members())
 
     @override
     async def async_open_cover(self, **kwargs: Any) -> None:
-        await self._group.async_move(MoveCode.SMART_DOWN)
+        await self._group.async_move(MoveCode.SMART_UP)
 
     @override
     async def async_close_cover(self, **kwargs: Any) -> None:
-        await self._group.async_move(MoveCode.SMART_UP)
+        await self._group.async_move(MoveCode.SMART_DOWN)
 
     @override
     async def async_stop_cover(self, **kwargs: Any) -> None:

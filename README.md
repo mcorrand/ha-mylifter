@@ -20,7 +20,7 @@ Each motor becomes a device with these entities:
 
 | Entity | Description |
 |---|---|
-| **Hoist** (cover) | *Open* lowers the lifter to the bottom smart point. *Close* raises it to the top smart point ("closed" = stowed at the top). *Stop* stops it. Position is 0 % at the top and 100 % at the bottom (see Calibration). There is no "set position" in v0.1. |
+| **Hoist** (cover) | *Open* raises the lifter to the top smart point. *Close* lowers it to the bottom smart point ("closed" = lowered, like a garage door). *Stop* stops it. Position is 100 % at the top and 0 % at the bottom (see Calibration). There is no "set position" in v0.1. |
 | **Load** | Raw load value reported by the motor (unit unknown). |
 | **Firmware** (diagnostic) | Motor firmware version. |
 | **Last error** (diagnostic) | Last integration error, plus the raw device error code. |
@@ -98,7 +98,7 @@ the same lifter"*.
 
 ### Calibration
 Position percent needs the raw positions of the top and bottom smart points. They are
-learned automatically when a close (top) and an open (bottom) complete on their own. You
+learned automatically when an open (top) and a close (bottom) complete on their own. You
 can view, edit or reset them under the integration's **Configure** options. Enable the
 *Raw position* sensor to see live values.
 
@@ -108,7 +108,7 @@ Do this supervised, with the lifter empty and the physical controls within reach
    values.
 2. Press **Stop** while nothing moves. Nothing should happen, and *Last error* stays
    "None".
-3. Short supervised move: press **Close** (raise) and press **Stop** after about 1 s. The
+3. Short supervised move: press **Open** (raise) and press **Stop** after about 1 s. The
    motor should stop within a fraction of a second.
 4. Let a full **Close** and **Open** complete, then check that the position shows 0 % and
    100 %.

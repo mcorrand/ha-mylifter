@@ -7,9 +7,9 @@ import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.mylifter.const import (
-    CONF_BOTTOM_POSITION,
     CONF_ENTRY_TYPE,
     CONF_MEMBERS,
+    CONF_TOP_POSITION,
     DOMAIN,
     ENTRY_TYPE_GROUP,
 )
@@ -86,8 +86,8 @@ async def test_group_moves_all_motors(hass: HomeAssistant, group_setup) -> None:
     assert all(d.smart_moves() for d in devices)
     await _wait(lambda: not _any_moving(devices, members))
     await _wait(lambda: group.runtime_data.moving is None)
-    assert all(d.position == 0 for d in devices)
-    assert all(m.options[CONF_BOTTOM_POSITION] == 0 for m in members)
+    assert all(d.position == 2000 for d in devices)
+    assert all(m.options[CONF_TOP_POSITION] == 2000 for m in members)
 
     await _call(hass, SERVICE_CLOSE_COVER, entity_id)
     await _wait(lambda: not _any_moving(devices, members))
@@ -119,7 +119,7 @@ async def test_group_stops_on_divergence(hass: HomeAssistant, group_setup) -> No
     entity_id, group, members, (dev1, dev2) = group_setup
     dev1.step = 100
     dev2.step = 6
-    dev1.bottom = -10000
+    dev1.top = 10000
     await _call(hass, SERVICE_OPEN_COVER, entity_id)
     await _wait(lambda: group.runtime_data.moving is None)
     await _wait(lambda: not _any_moving((dev1, dev2), members))
@@ -129,7 +129,7 @@ async def test_group_stops_on_divergence(hass: HomeAssistant, group_setup) -> No
 async def test_group_out_of_sync(hass: HomeAssistant, group_setup) -> None:
     """One member already at the smart point, the other not: stop and report."""
     entity_id, _group, members, (dev1, dev2) = group_setup
-    dev1.position = 0
+    dev1.position = 2000
     await members[0].runtime_data.async_refresh()
     dev2.step = 5
     with pytest.raises(HomeAssistantError, match="not at the same smart point"):

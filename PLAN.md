@@ -63,7 +63,7 @@ directly. See DECISIONS.md.
 
 | Entity | Platform | Notes |
 |---|---|---|
-| Hoist (device name) | `cover` | `OPEN` → `SMART_DOWN`, `CLOSE` → `SMART_UP`, `STOP`. Closed = stowed at the top smart point. `current_cover_position` 0 (top) … 100 (bottom) from learned/configured raw positions. No `SET_POSITION` (see Safety). For motors marked as part of a multi-motor lifter: **STOP only**. |
+| Hoist (device name) | `cover` | `OPEN` → `SMART_UP`, `CLOSE` → `SMART_DOWN`, `STOP`. Closed = lowered to the bottom smart point. `current_cover_position` 0 (bottom) … 100 (top) from learned/configured raw positions. No `SET_POSITION` (see Safety). For motors marked as part of a multi-motor lifter: **STOP only**. |
 | Load | `sensor` | Raw load value from the MOVE response (unit unknown, see DECISIONS.md). `state_class: measurement`. |
 | Raw position | `sensor` (diagnostic, disabled by default) | Motor ticks; useful for calibration. |
 | Firmware | `sensor` (diagnostic) | Also set as device `sw_version`. |
